@@ -387,6 +387,27 @@ FLATKRABSETW_API uint16_t krabs_get_u16_property_from_parser(
     return UINT16_MAX;
 }
 
+FLATKRABSETW_API uint8_t krabs_get_u8_property_from_parser(
+    krabs_status_ctx* status,
+    krabs_event_parser* const parser,
+    krabs_property_name* const property_name)
+{
+    ZeroMemory(status, sizeof krabs_status_ctx);
+
+    try {
+        krabs::parser* unwrapped_parser = (krabs::parser*)parser;
+        const std::wstring* unwrapped_property_name = (const std::wstring*)property_name;
+
+        return unwrapped_parser->parse<uint8_t>(*unwrapped_property_name);
+    }
+    catch (const std::exception& ex) {
+        strcpy_s(status->msg, ARRAYSIZE(status->msg), ex.what());
+        status->status = krabs_error_unknown_error;
+    }
+
+    return UINT8_MAX;
+}
+
 
 FLATKRABSETW_API krabs_ip_address* krabs_get_ip_addr_property_from_parser(
     krabs_status_ctx *status,
